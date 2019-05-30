@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
+var shell = require('shelljs');
 
 const app = express();
 
@@ -44,18 +45,25 @@ app.use((req, res, next) => {
   next();
 });
 
-//@router test
-app.get("/", (req, res) =>
-  res.json({
-    greet: "hello"
-  })
-);
+build = () => {
+  return shell.exec('sh first.sh').stdout
+}
 
-app.get("/enablelike", (req, res) =>
+
+//@router test
+app.get("/", (req, res) => {
+  let value = build()
   res.json({
-    greet: "hello"
+    greet: value
   })
-);
+});
+
+app.get("/enablelike", (req, res) => {
+  let value = build()
+  res.json({
+    greet: value
+  })
+});
 
 app.get("/disablelike", (req, res) => {
   setTimeout(() => {
